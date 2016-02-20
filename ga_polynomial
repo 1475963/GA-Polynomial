@@ -1,0 +1,105 @@
+#!/usr/bin/python
+
+from __future__ import print_function
+import pprint as pp
+import random
+import sys
+from ga_entities import Fragment, Solution, Population
+import consts as Consts
+
+def getData(filename):
+	data = []
+	dataFile = open(filename, 'r')
+	for line in dataFile:
+		data.append(tuple(float(word) for word in line.split()))
+	return data
+
+def getSample(population):
+	sample = []
+	for i in range(int(Consts.SAMPLE_SIZE)):
+		solution = population.solutions[int(random.uniform(0, len(population.solutions) - 1))]
+		"""
+		while solution in population.solutions:
+			solution = population.solutions[int(random.uniform(0, len(population.solutions) - 1))]
+		"""
+		sample.append(solution)
+	return sample
+
+def getRandomSolution(population):
+	return population.solutions[int(random.uniform(0, len(population.solutions) - 1))]
+
+def generate(warmongers=[]):
+	population = Population(Consts.MAX_POPULATION,
+							Consts.FRAGMENT_PER_SOLUTION,
+							Consts.FRAGMENT_LENGTH,
+							Consts.MIN_RANGE,
+							Consts.MAX_RANGE)
+	population.solutions.extend(warmongers)
+	return population
+
+def fitness(population, data, scale):
+	population.evaluate(data, scale)
+
+def selection(population):
+	def rouletteWheel(sample, selected):
+		sumFitness = 0
+		for solution in sample:
+			sumFitness += solution.fitness
+		target = random.uniform(0, sumFitness)
+		roulette = 0
+		for solution in sample:
+			roulette += solution.fitness
+			if roulette >= target:
+				selected.append(solution)
+				break
+
+	selected = []
+	for i in range(int(Consts.MAX_POPULATION / Consts.SAMPLE_SIZE)):
+		# any selection method
+		rouletteWheel(getSample(population), selected)
+	return selected
+
+def crossover(population):
+	# implement crossover in solution
+	for solution in population.solutions:
+		if random.uniform(0, 1) < Consts.CROSSOVER_RATE:
+			solution.crossover(getRandomSolution(population))
+
+def mutation(population):
+	# WORK IN PROGRESS
+	return
+
+def ga_polynomial():
+	data = getData(Consts.FILENAME)
+	ymax = max([xy[1] for xy in data])
+	ymin = min([xy[1] for xy in data])
+	yscale = ymax if abs(ymax) > abs(ymin) else ymin
+	print("y ref: ", yscale)
+	history = []
+	population = generate()
+	fitness(population, data, yscale)
+	print("best solution in population : " + str(population.best().fragments) + "\nfitness : " + str(population.best().fitness))
+	history.append(population)
+#	oldFitness = population.best().fitness
+	currentFitness = population.best().fitness
+	# try end loop with change celerity
+	while (currentFitness > Consts.FITNESS_THRESHOLD):
+		print("actual population size: {}, actual population overall fitness: {}".format(len(population.solutions), population.fitness))
+		population.solutions = selection(population)
+		crossover(population)
+		mutation(population)
+		fitness(population, data, yscale)
+		print("best solution in population : " + str(population.best().fragments) + "\nfitness : " + str(population.best().fitness))
+		history.append(population)
+	return
+
+""" entry point """
+
+if __name__ == '__main__':
+	if len(sys.argv) == 1:
+		try:
+			ga_polynomial()
+		except ValueError as e:
+			print(e)
+	else:
+		print(Consts.USAGE)

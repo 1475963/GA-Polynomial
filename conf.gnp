@@ -1,0 +1,2 @@
+set xrange[-100:900]
+plot 'datfile.dat' using 1:2 title "datfile" lw 2 with line, (0)+(0*x)+(65169*x**2)+(32*x**3)+(0*x**4)+(0*x**5) title "myfunc" lw 2 with line;
