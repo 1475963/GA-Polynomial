@@ -1,2 +1,4 @@
+set terminal png
+set output "output.jpg"
 set xrange[-100:900]
-plot 'datfile.dat' using 1:2 title "datfile" lw 2 with line, (0)+(0*x)+(65169*x**2)+(32*x**3)+(0*x**4)+(0*x**5) title "myfunc" lw 2 with line;
+plot 'datfile.dat' using 1:2 title "datfile" lw 2 with line, (-1667684981)+(1403556523*x)+(-488222634*x**2)+(-702652931*x**3)+(422486568*x**4)+(1892892423*x**5) title "myfunc" lw 2 with line;

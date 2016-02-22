@@ -4,102 +4,152 @@ from __future__ import print_function
 import pprint as pp
 import random
 import sys
+import os
+import cProfile, pstats
 from ga_entities import Fragment, Solution, Population
 import consts as Consts
 
 def getData(filename):
-	data = []
-	dataFile = open(filename, 'r')
-	for line in dataFile:
-		data.append(tuple(float(word) for word in line.split()))
-	return data
+    data = []
+    dataFile = open(filename, 'r')
+    for line in dataFile:
+        data.append(tuple(float(word) for word in line.split()))
+    return data
 
-def getSample(population):
-	sample = []
-	for i in range(int(Consts.SAMPLE_SIZE)):
-		solution = population.solutions[int(random.uniform(0, len(population.solutions) - 1))]
-		"""
-		while solution in population.solutions:
-			solution = population.solutions[int(random.uniform(0, len(population.solutions) - 1))]
-		"""
-		sample.append(solution)
-	return sample
+def dumpHistory(history, lastPopulation):
+    historyFile = open(Consts.HISTORY_FILE, 'w+')
+    print("============== HISTORY OF POPULATIONS FOR {} RUNS ==============".format(Consts.TRIES), file=historyFile)
+    print(history, file=historyFile)
+    print("============== BEST OF LAST POPULATION DETAILS ==============", file=historyFile)
+    print(lastPopulation.best().fragments, file=historyFile)
+    print(lastPopulation.best().fitness, file=historyFile)
+
+def dropGnpConf(lastPopulation):
+    confFile = open(Consts.GNP_CONF_FILE, 'w+')
+    bestFragments = lastPopulation.best().fragments
+    print(Consts.CONF.format(Consts.DATA_FILE,
+                      bestFragments[0].bits.int,
+                      bestFragments[1].bits.int,
+                      bestFragments[2].bits.int,
+                      bestFragments[3].bits.int,
+                      bestFragments[4].bits.int,
+                      bestFragments[5].bits.int), file=confFile)
+
+def dropImageSave():
+    os.system(Consts.GNP_EXEC)
 
 def getRandomSolution(population):
-	return population.solutions[int(random.uniform(0, len(population.solutions) - 1))]
+    return population.solutions[int(random.uniform(0, len(population.solutions) - 1))]
+
+def getSample(population, sampleSize):
+    sample = []
+    for i in range(int(sampleSize)):
+        solution = getRandomSolution(population)
+        """
+        while solution in population.solutions:
+            solution = population.solutions[int(random.uniform(0, len(population.solutions) - 1))]
+        """
+        sample.append(solution)
+    return sample
 
 def generate(warmongers=[]):
-	population = Population(Consts.MAX_POPULATION,
-							Consts.FRAGMENT_PER_SOLUTION,
-							Consts.FRAGMENT_LENGTH,
-							Consts.MIN_RANGE,
-							Consts.MAX_RANGE)
-	population.solutions.extend(warmongers)
-	return population
+    population = Population(Consts.MAX_POPULATION,
+                            Consts.FRAGMENT_PER_SOLUTION,
+                            Consts.FRAGMENT_LENGTH)
+    population.solutions.extend(warmongers)
+    return population
 
 def fitness(population, data, scale):
-	population.evaluate(data, scale)
+    population.evaluate(data, scale)
 
 def selection(population):
-	def rouletteWheel(sample, selected):
-		sumFitness = 0
-		for solution in sample:
-			sumFitness += solution.fitness
-		target = random.uniform(0, sumFitness)
-		roulette = 0
-		for solution in sample:
-			roulette += solution.fitness
-			if roulette >= target:
-				selected.append(solution)
-				break
+    def rouletteWheel(sample, selected):
+        for j in range(int(Consts.SAMPLE_SIZE)):
+            sumFitness = 0
+            for solution in sample:
+                sumFitness += solution.fitness
+            target = random.uniform(0, sumFitness)
+            roulette = 0
+            for solution in sample:
+                roulette += solution.fitness
+                if roulette >= target:
+                    selected.append(solution)
+                    break
 
-	selected = []
-	for i in range(int(Consts.MAX_POPULATION / Consts.SAMPLE_SIZE)):
-		# any selection method
-		rouletteWheel(getSample(population), selected)
-	return selected
+    def tournament(sample, selected):
+        for j in range(int(Consts.SAMPLE_SIZE)):
+            bestFitness = float("inf")
+            index = 0
+            for i, solution in enumerate(sample):
+                if solution.fitness < bestFitness:
+                    bestFitness = solution.fitness
+                    index = i
+            selected.append(sample[index])
+
+    selected = []
+    for i in range(int(Consts.MAX_POPULATION / Consts.SAMPLE_SIZE)):
+        # any selection method
+#       rouletteWheel(getSample(population, Consts.SAMPLE_SIZE), selected)
+        tournament(getSample(population, Consts.SAMPLE_SIZE), selected)
+    return selected
 
 def crossover(population):
-	# implement crossover in solution
-	for solution in population.solutions:
-		if random.uniform(0, 1) < Consts.CROSSOVER_RATE:
-			solution.crossover(getRandomSolution(population))
+    for solution in population.solutions:
+        if random.uniform(0, 1) <= Consts.CROSSOVER_RATE:
+            solution.crossover(getRandomSolution(population))
 
 def mutation(population):
-	# WORK IN PROGRESS
-	return
+    for solution in population.solutions:
+        if random.uniform(0, 1) <= Consts.SOLUTION_MUTATION_RATE:
+            solution.mutate()
 
 def ga_polynomial():
-	data = getData(Consts.FILENAME)
-	ymax = max([xy[1] for xy in data])
-	ymin = min([xy[1] for xy in data])
-	yscale = ymax if abs(ymax) > abs(ymin) else ymin
-	print("y ref: ", yscale)
-	history = []
-	population = generate()
-	fitness(population, data, yscale)
-	print("best solution in population : " + str(population.best().fragments) + "\nfitness : " + str(population.best().fitness))
-	history.append(population)
-#	oldFitness = population.best().fitness
-	currentFitness = population.best().fitness
-	# try end loop with change celerity
-	while (currentFitness > Consts.FITNESS_THRESHOLD):
-		print("actual population size: {}, actual population overall fitness: {}".format(len(population.solutions), population.fitness))
-		population.solutions = selection(population)
-		crossover(population)
-		mutation(population)
-		fitness(population, data, yscale)
-		print("best solution in population : " + str(population.best().fragments) + "\nfitness : " + str(population.best().fitness))
-		history.append(population)
-	return
+    data = getData(Consts.DATA_FILE)
+    ymax = max([xy[1] for xy in data])
+    ymin = min([xy[1] for xy in data])
+    yscale = ymax if abs(ymax) > abs(ymin) else ymin
+    print("y ref: ", yscale)
+#   history = []
+    population = generate()
+    fitness(population, data, yscale)
+    print("best solution in population : " + str(population.best().fragments) + "\nfitness : " + str(population.best().fitness))
+#   history.append(population)
+#   oldFitness = population.best().fitness
+    currentFitness = population.best().fitness
+    # static end loop with number of simulation tries
+    for t in range(Consts.TRIES):
+# end loop with fitness threshold
+#   while (currentFitness > Consts.FITNESS_THRESHOLD):
+# should try end loop with celerity change sensibility
+        print("actual population size: {}, actual population overall fitness: {}".format(len(population.solutions), population.fitness))
+        population.solutions = selection(population)
+        crossover(population)
+        mutation(population)
+        fitness(population, data, yscale)
+        print("best solution in population : " + str(population.best().fragments) + "\nfitness : " + str(population.best().fitness))
+        """
+        history.append(population)
+        currentFitness = population.best().fitness
+        dropGnpConf(population)
+        dropImageSave()
+    dumpHistory(history, population)
+    """
+    dropGnpConf(population)
+    dropImageSave()
 
 """ entry point """
 
 if __name__ == '__main__':
-	if len(sys.argv) == 1:
-		try:
-			ga_polynomial()
-		except ValueError as e:
-			print(e)
-	else:
-		print(Consts.USAGE)
+    if len(sys.argv) == 1:
+        try:
+            pr = cProfile.Profile()
+            pr.enable()
+            ga_polynomial()
+            pr.disable()
+            with open(r"profile", "w+") as s:
+                ps = pstats.Stats(pr, stream=s).sort_stats('cumulative')
+                ps.print_stats()
+        except ValueError as e:
+            print(e)
+    else:
+        print(Consts.USAGE)
