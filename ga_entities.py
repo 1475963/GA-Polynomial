@@ -6,6 +6,7 @@ import math
 import os
 from threading import Thread
 import consts as Consts
+from start import data, dataMatrix
 
 class Fragment(object):
     """ fragment object """
@@ -14,6 +15,7 @@ class Fragment(object):
         self.length = length
         self.bits = bitstring.BitString(int=int.from_bytes(os.urandom(int(length / 8)), byteorder='big', signed=True),
                                         length=length)
+        self.bitsValue = self.bits.int
 
     def __del__(self):
         # empty destructor
@@ -22,7 +24,7 @@ class Fragment(object):
     def __repr__(self):
         return (("length = {} "
                  + "bits = {} "
-                 + "value = {} ").format(self.length, self.bits, self.bits.int))
+                 + "value = {} ").format(self.length, self.bits, self.bitsValue))
 
     def mutate(self):
         def newFragment(fragment):
@@ -36,6 +38,7 @@ class Fragment(object):
         # apply any mutation type
         #newFragment(self)
         mutateBitOfFragment(self)
+        self.bitsValue = self.bits.int
 
     @property
     def length(self):
@@ -52,6 +55,14 @@ class Fragment(object):
     @bits.setter
     def bits(self, value):
         self.__bits = value
+
+    @property
+    def bitsValue(self):
+        return self.__bitsValue
+
+    @bitsValue.setter
+    def bitsValue(self, value):
+        self.__bitsValue = value
 
 class Solution(object):
     """ solution object """
@@ -75,16 +86,18 @@ class Solution(object):
                  + "fitness = {:.2f}").format(self.size, self.fragments, float(self.fitness)))
         """
 
-    def evaluate(self, data, scale):
+    def evaluate(self):
         for i in range(len(data)):
             ysolution = 0
             for j in range(Consts.FRAGMENT_PER_SOLUTION):
-                ysolution += (self.fragments[j].bits.int * (data[i][0] ** j))
-#           print("mine : %f, real %f" % (ysolution, data[i][1]))
+                ysolution += (self.fragments[j].bitsValue * dataMatrix[i][j])
+#            print("mine : %f, real %f" % (ysolution, data[i][1]))
             # fitness with scale (slower)
 #           self.fitness += math.sqrt(((data[i][1] / scale) - (ysolution / scale)) ** 2)
             # fitness without scale (faster)
-            self.fitness += math.sqrt((data[i][1] - ysolution) ** 2)
+#            self.fitness += math.sqrt((data[i][1] - ysolution) ** 2)
+            # absolute value (even faster ?)
+            self.fitness += abs(data[i][1] - ysolution)
         self.fitness /= len(data)
 
     def crossover(self, solution):
@@ -144,19 +157,19 @@ class Population(object):
                  + "solutions = {} "
                  + "fitness = {:.2f}").format(self.maxPop, self.solutions, float(self.fitness)))
 
-    def evaluate(self, data, scale):
-#        self.threadEvaluate(data, scale)
+    def evaluate(self):
+#        self.threadEvaluate()
         fitnesses = 0
         for solution in self.solutions:
-            solution.evaluate(data, scale)
+            solution.evaluate()
             fitnesses += solution.fitness
         self.fitness = fitnesses / len(self.solutions)
 
-    def threadEvaluate(self, data, scale):
+    def threadEvaluate(self):
         threads = []
         for solution in self.solutions:
             # Thread solution evaluate
-            t = Thread(target=solution.evaluate, args=(data, scale,))
+            t = Thread(target=solution.evaluate, args=())
             threads.append(t)
             t.start()
         # Wait for all threads

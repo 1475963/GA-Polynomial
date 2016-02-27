@@ -8,13 +8,20 @@ import os
 import cProfile, pstats
 from ga_entities import Fragment, Solution, Population
 import consts as Consts
+from start import data, dataMatrix
 
 def getData(filename):
-    data = []
     dataFile = open(filename, 'r')
     for line in dataFile:
         data.append(tuple(float(word) for word in line.split()))
     return data
+
+def getDataMatrix(data):
+    for i in range(len(data)):
+        dataMatrix.append([])
+        for j in range(Consts.FRAGMENT_PER_SOLUTION):
+            dataMatrix[i].append(data[i][0] ** j)
+    return dataMatrix
 
 def dumpHistory(history, lastPopulation):
     historyFile = open(Consts.HISTORY_FILE, 'w+')
@@ -28,12 +35,12 @@ def dropGnpConf(lastPopulation):
     confFile = open(Consts.GNP_CONF_FILE, 'w+')
     bestFragments = lastPopulation.best().fragments
     print(Consts.CONF.format(Consts.DATA_FILE,
-                      bestFragments[0].bits.int,
-                      bestFragments[1].bits.int,
-                      bestFragments[2].bits.int,
-                      bestFragments[3].bits.int,
-                      bestFragments[4].bits.int,
-                      bestFragments[5].bits.int), file=confFile)
+                      bestFragments[0].bitsValue,
+                      bestFragments[1].bitsValue,
+                      bestFragments[2].bitsValue,
+                      bestFragments[3].bitsValue,
+                      bestFragments[4].bitsValue,
+                      bestFragments[5].bitsValue), file=confFile)
 
 def dropImageSave():
     os.system(Consts.GNP_EXEC)
@@ -59,11 +66,12 @@ def generate(warmongers=[]):
     population.solutions.extend(warmongers)
     return population
 
-def fitness(population, data, scale):
-    population.evaluate(data, scale)
+def fitness(population):
+    population.evaluate()
 
 def selection(population):
     def rouletteWheel(sample, selected):
+        # fucked up roulette wheel
         for j in range(int(Consts.SAMPLE_SIZE)):
             sumFitness = 0
             for solution in sample:
@@ -104,52 +112,24 @@ def mutation(population):
             solution.mutate()
 
 def ga_polynomial():
-    data = getData(Consts.DATA_FILE)
-    ymax = max([xy[1] for xy in data])
-    ymin = min([xy[1] for xy in data])
-    yscale = ymax if abs(ymax) > abs(ymin) else ymin
-    print("y ref: ", yscale)
-#   history = []
+    print("## START")
+    history = []
     population = generate()
-    fitness(population, data, yscale)
-    print("best solution in population : " + str(population.best().fragments) + "\nfitness : " + str(population.best().fitness))
-#   history.append(population)
-#   oldFitness = population.best().fitness
-    currentFitness = population.best().fitness
+    history.append(population)
     # static end loop with number of simulation tries
     for t in range(Consts.TRIES):
 # end loop with fitness threshold
 #   while (currentFitness > Consts.FITNESS_THRESHOLD):
 # should try end loop with celerity change sensibility
-        print("actual population size: {}, actual population overall fitness: {}".format(len(population.solutions), population.fitness))
+        fitness(population)
+        print("actual try: {}, actual population size: {}, actual population overall fitness: {}".format(t, len(population.solutions), population.fitness))
+        bestSolution = population.best()
+        print("best solution in population : " + str(bestSolution.fragments) + "\nfitness : " + str(bestSolution.fitness))
         population.solutions = selection(population)
         crossover(population)
         mutation(population)
-        fitness(population, data, yscale)
-        print("best solution in population : " + str(population.best().fragments) + "\nfitness : " + str(population.best().fitness))
-        """
         history.append(population)
-        currentFitness = population.best().fitness
-        dropGnpConf(population)
-        dropImageSave()
     dumpHistory(history, population)
-    """
     dropGnpConf(population)
     dropImageSave()
-
-""" entry point """
-
-if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        try:
-            pr = cProfile.Profile()
-            pr.enable()
-            ga_polynomial()
-            pr.disable()
-            with open(r"profile", "w+") as s:
-                ps = pstats.Stats(pr, stream=s).sort_stats('cumulative')
-                ps.print_stats()
-        except ValueError as e:
-            print(e)
-    else:
-        print(Consts.USAGE)
+    print("## END")

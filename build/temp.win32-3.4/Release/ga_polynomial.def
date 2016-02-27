@@ -1,0 +1,3 @@
+LIBRARY ga_polynomial.pyd
+EXPORTS
+PyInit_ga_polynomial

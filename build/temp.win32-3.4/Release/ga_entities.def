@@ -1,0 +1,3 @@
+LIBRARY ga_entities.pyd
+EXPORTS
+PyInit_ga_entities

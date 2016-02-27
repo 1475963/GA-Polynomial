@@ -1,0 +1,14 @@
+#ifndef __FRAGMENT_H__
+# define __FRAGMENT_H__
+
+# include <string>
+
+class Fragment {
+ private:
+  unsigned int _length;
+  std::string _bits;
+ public:
+  Fragment()
+}
+
+#endif /* !__FRAGMENT_H__ */
