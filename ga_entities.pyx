@@ -1,5 +1,8 @@
 ## genetic algorithm objects
 
+import cython
+from libc.stdlib cimport malloc, free
+from cython.parallel import parallel, prange
 import random
 import bitstring
 import math
@@ -7,6 +10,8 @@ import os
 from threading import Thread
 import consts as Consts
 from start import data, dataMatrix
+from cpython cimport array
+import array
 
 class Fragment(object):
     """ fragment object """
@@ -40,30 +45,6 @@ class Fragment(object):
         mutateBitOfFragment(self)
         self.bitsValue = self.bits.int
 
-    @property
-    def length(self):
-        return self.__length
-
-    @length.setter
-    def length(self, value):
-        self.__length = value
-
-    @property
-    def bits(self):
-        return self.__bits
-
-    @bits.setter
-    def bits(self, value):
-        self.__bits = value
-
-    @property
-    def bitsValue(self):
-        return self.__bitsValue
-
-    @bitsValue.setter
-    def bitsValue(self, value):
-        self.__bitsValue = value
-
 class Solution(object):
     """ solution object """
 
@@ -87,18 +68,37 @@ class Solution(object):
         """
 
     def evaluate(self):
+        tmpList = []
+        for j in range(Consts.FRAGMENT_PER_SOLUTION):
+            tmpList.append(self.fragments[j].bitsValue)
+        cdef array.array ctmpList = array.array('i', tmpList)
+        cdef int[:] ctl = ctmpList
+        cdef double ysolution
+        cdef double fitnesses
+        cdef int k
+        fitnesses = 0
+        """
+        cdef int fragmentPerSolution
+        fragmentPerSolution = Consts.FRAGMENT_PER_SOLUTION
+        """
+        k = 0
         for i in range(len(data)):
             ysolution = 0
-            for j in range(Consts.FRAGMENT_PER_SOLUTION):
-                ysolution += (self.fragments[j].bitsValue * dataMatrix[i][j])
+            """
+            with nogil:
+                for k in prange(fragmentPerSolution):
+                    ysolution += (ctl[k] * dataMatrix[i][k])#(tmpList[k] * dataMatrix[i][k])
+            """
+            for k in range(Consts.FRAGMENT_PER_SOLUTION):
+                ysolution += (tmpList[k] * dataMatrix[i][k])
 #            print("mine : %f, real %f" % (ysolution, data[i][1]))
             # fitness with scale (slower)
 #           self.fitness += math.sqrt(((data[i][1] / scale) - (ysolution / scale)) ** 2)
             # fitness without scale (faster)
 #            self.fitness += math.sqrt((data[i][1] - ysolution) ** 2)
             # absolute value (even faster ?)
-            self.fitness += abs(data[i][1] - ysolution)
-        self.fitness /= len(data)
+            fitnesses += abs(data[i][1] - ysolution)
+        self.fitness = fitnesses / len(data)
 
     def crossover(self, solution):
         def uniform(firstParent, secondParent):
@@ -113,30 +113,6 @@ class Solution(object):
 
     def mutate(self):
         self.fragments[random.randint(0, Consts.FRAGMENT_PER_SOLUTION - 1)].mutate()
-
-    @property
-    def size(self):
-        return self.__size
-
-    @size.setter
-    def size(self, value):
-        self.__size = value
-
-    @property
-    def fragments(self):
-        return self.__fragments
-
-    @fragments.setter
-    def fragments(self, value):
-        self.__fragments = value
-
-    @property
-    def fitness(self):
-        return self.__fitness
-
-    @fitness.setter
-    def fitness(self, value):
-        self.__fitness = value
 
 class Population(object):
     """ population object """
@@ -160,6 +136,14 @@ class Population(object):
     def evaluate(self):
 #        self.threadEvaluate()
         fitnesses = 0
+        """
+        cdef int i
+        cdef int solutionsLength
+        solutionsLength = len(self.solutions)
+        with nogil:
+            for i in prange(solutionsLength):
+                solutions[i].evaluate()
+        """
         for solution in self.solutions:
             solution.evaluate()
             fitnesses += solution.fitness
@@ -188,27 +172,3 @@ class Population(object):
                 best = solution.fitness
                 index = i
         return self.solutions[index]
-
-    @property
-    def maxPop(self):
-        return self.__maxPop
-
-    @maxPop.setter
-    def maxPop(self, value):
-        self.__maxPop = value
-
-    @property
-    def solutions(self):
-        return self.__solutions
-
-    @solutions.setter
-    def solutions(self, value):
-        self.__solutions = value
-
-    @property
-    def fitness(self):
-        return self.__fitness
-
-    @fitness.setter
-    def fitness(self, value):
-        self.__fitness = value

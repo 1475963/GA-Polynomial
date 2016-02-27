@@ -12,11 +12,30 @@ from start import data, dataMatrix
 
 def getData(filename):
     dataFile = open(filename, 'r')
+    """
+    data = <float **> malloc(len(dataFile) * cython.sizeof(float *))
+    if data is NULL:
+        raise MemoryError()
+    for i, line in enumerate(dataFile):
+        # store 2 floats in each row
+        data[i] = <float *> malloc(2 * cython.sizeof(float))
+        for j, word in enumerate(line.split()):
+            data[i][j] = float(word)
+    """
     for line in dataFile:
         data.append(tuple(float(word) for word in line.split()))
     return data
 
 def getDataMatrix(data):
+    """
+    dataMatrix = <float **> malloc(len(data) * cython.sizeof(float *))
+    if dataMatrix is NULL:
+        raise MemoryError()
+    for i in range(len(data)):
+        data[i] = <float *> malloc(Consts.FRAGMENT_PER_SOLUTION * cython.sizeof(float))
+        for j in range(Consts.FRAGMENT_PER_SOLUTION):
+            data[i][j] = data[i][0] ** j
+    """
     for i in range(len(data)):
         dataMatrix.append([])
         for j in range(Consts.FRAGMENT_PER_SOLUTION):

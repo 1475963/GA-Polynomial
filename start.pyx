@@ -3,7 +3,9 @@ import cProfile, pstats
 import ga_polynomial as GA_POLY
 import consts as Consts
 
+#cdef float ** data
 data = []
+#cdef float ** dataMatrix
 dataMatrix = []
 
 """ entry point """
