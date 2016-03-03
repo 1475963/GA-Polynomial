@@ -64,20 +64,6 @@ def dropGnpConf(lastPopulation):
 def dropImageSave():
     os.system(Consts.GNP_EXEC)
 
-def getRandomSolution(population):
-    return population.solutions[int(random.uniform(0, len(population.solutions) - 1))]
-
-def getSample(population, sampleSize):
-    sample = []
-    for i in range(int(sampleSize)):
-        solution = getRandomSolution(population)
-        """
-        while solution in population.solutions:
-            solution = population.solutions[int(random.uniform(0, len(population.solutions) - 1))]
-        """
-        sample.append(solution)
-    return sample
-
 def generate(warmongers=[]):
     population = Population(Consts.MAX_POPULATION,
                             Consts.FRAGMENT_PER_SOLUTION,
@@ -85,45 +71,28 @@ def generate(warmongers=[]):
     population.solutions.extend(warmongers)
     return population
 
-def fitness(population):
-    population.evaluate()
-
 def selection(population):
-    def rouletteWheel(sample, selected):
-        # fucked up roulette wheel
-        for j in range(int(Consts.SAMPLE_SIZE)):
-            sumFitness = 0
-            for solution in sample:
-                sumFitness += solution.fitness
-            target = random.uniform(0, sumFitness)
-            roulette = 0
-            for solution in sample:
-                roulette += solution.fitness
-                if roulette >= target:
-                    selected.append(solution)
-                    break
-
-    def tournament(sample, selected):
-        for j in range(int(Consts.SAMPLE_SIZE)):
+    def tournament(selected):
+        for j in range(Consts.SAMPLE_SIZE):
+            sample = random.sample(population.solutions, Consts.SAMPLE_SIZE)
             bestFitness = float("inf")
             index = 0
             for i, solution in enumerate(sample):
                 if solution.fitness < bestFitness:
                     bestFitness = solution.fitness
                     index = i
-            selected.append(sample[index])
+            selected.append(sample[index].copy())
 
     selected = []
     for i in range(int(Consts.MAX_POPULATION / Consts.SAMPLE_SIZE)):
         # any selection method
-#       rouletteWheel(getSample(population, Consts.SAMPLE_SIZE), selected)
-        tournament(getSample(population, Consts.SAMPLE_SIZE), selected)
+        tournament(selected)
     return selected
 
 def crossover(population):
     for solution in population.solutions:
         if random.uniform(0, 1) <= Consts.CROSSOVER_RATE:
-            solution.crossover(getRandomSolution(population))
+            solution.crossover(random.choice(population.solutions))
 
 def mutation(population):
     for solution in population.solutions:
@@ -132,22 +101,30 @@ def mutation(population):
 
 def ga_polynomial():
     print("## START")
+    step = int(Consts.TRIES / 100)
     history = []
     population = generate()
-    history.append(population)
+    history.append(population.best())
     # static end loop with number of simulation tries
     for t in range(Consts.TRIES):
 # end loop with fitness threshold
 #   while (currentFitness > Consts.FITNESS_THRESHOLD):
 # should try end loop with celerity change sensibility
-        fitness(population)
-        print("actual try: {}, actual population size: {}, actual population overall fitness: {}".format(t, len(population.solutions), population.fitness))
-        bestSolution = population.best()
-        print("best solution in population : " + str(bestSolution.fragments) + "\nfitness : " + str(bestSolution.fitness))
-        population.solutions = selection(population)
+        appliedStep = t % step
+        population.evaluate()
+        population.sort()
+#        print(population.solutions)
+        elites = population.elite()
+        if appliedStep == 0:
+            bestSolution = population.best()
+            print("actual try: {}, actual population size: {}, actual population overall fitness: {:.2E}".format(t, len(population.solutions), population.fitness))
+            print("best solution in population : {}\nfitness : {:.2E}".format(str(bestSolution.fragments), bestSolution.fitness))
+        population.solutions = selection(population)[:Consts.MAX_POPULATION - Consts.ELITES_NUMBER]
         crossover(population)
         mutation(population)
-        history.append(population)
+        population.solutions = elites + population.solutions
+        if appliedStep == 0:
+            history.append(population.best())
     dumpHistory(history, population)
     dropGnpConf(population)
     dropImageSave()

@@ -1,4 +1,4 @@
 set terminal png
 set output "output.jpg"
-set xrange[-100:900]
-plot 'datfile.dat' using 1:2 title "datfile" lw 2 with line, (22789)+(9808*x)+(7416*x**2)+(19555*x**3)+(22116*x**4)+(25453*x**5) title "myfunc" lw 2 with line;
+set autoscale xy
+plot 'datfile.dat' using 1:2 title "datfile" lw 2 with line, (-1.9999983310699463)+(1.9999998807907104*x)+(511.9999694824219*x**2)+(127.99999237060547*x**3)+(-0.0021715164184570312*x**4)+(-3.0517576306010596e-05*x**5) title "myfunc" lw 2 with line;

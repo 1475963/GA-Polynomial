@@ -601,9 +601,9 @@ static char __pyx_k_CROSSOVER_RATE[] = "CROSSOVER_RATE";
 static char __pyx_k_MAX_POPULATION[] = "MAX_POPULATION";
 static char __pyx_k_FRAGMENT_LENGTH[] = "FRAGMENT_LENGTH";
 static char __pyx_k_gnuplot_persist[] = "gnuplot -persist {}";
+static char __pyx_k_set_autoscale_xy[] = "set autoscale xy\n";
 static char __pyx_k_set_terminal_png[] = "set terminal png\n";
 static char __pyx_k_FITNESS_THRESHOLD[] = "FITNESS_THRESHOLD";
-static char __pyx_k_set_xrange_100_900[] = "set xrange[-100:900]\n";
 static char __pyx_k_USAGE_ga_polynomial[] = "USAGE:\t./ga_polynomial";
 static char __pyx_k_FRAGMENT_PER_SOLUTION[] = "FRAGMENT_PER_SOLUTION";
 static char __pyx_k_set_output_output_jpg[] = "set output \"output.jpg\"\n";
@@ -634,18 +634,19 @@ static PyObject *__pyx_kp_s_gnuplot_persist;
 static PyObject *__pyx_kp_s_history_dump;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_kp_s_plot_using_1_2_title_datfile_lw;
+static PyObject *__pyx_kp_s_set_autoscale_xy;
 static PyObject *__pyx_kp_s_set_output_output_jpg;
 static PyObject *__pyx_kp_s_set_terminal_png;
-static PyObject *__pyx_kp_s_set_xrange_100_900;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_float_0_1;
 static PyObject *__pyx_float_0_5;
+static PyObject *__pyx_float_0_7;
 static PyObject *__pyx_float_0_01;
-static PyObject *__pyx_float_0_75;
+static PyObject *__pyx_float_0_05;
+static PyObject *__pyx_int_2;
 static PyObject *__pyx_int_6;
-static PyObject *__pyx_int_16;
-static PyObject *__pyx_int_80;
-static PyObject *__pyx_int_800;
+static PyObject *__pyx_int_32;
+static PyObject *__pyx_int_100;
+static PyObject *__pyx_int_500;
 
 static PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -694,9 +695,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_history_dump, __pyx_k_history_dump, sizeof(__pyx_k_history_dump), 0, 0, 1, 0},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_kp_s_plot_using_1_2_title_datfile_lw, __pyx_k_plot_using_1_2_title_datfile_lw, sizeof(__pyx_k_plot_using_1_2_title_datfile_lw), 0, 0, 1, 0},
+  {&__pyx_kp_s_set_autoscale_xy, __pyx_k_set_autoscale_xy, sizeof(__pyx_k_set_autoscale_xy), 0, 0, 1, 0},
   {&__pyx_kp_s_set_output_output_jpg, __pyx_k_set_output_output_jpg, sizeof(__pyx_k_set_output_output_jpg), 0, 0, 1, 0},
   {&__pyx_kp_s_set_terminal_png, __pyx_k_set_terminal_png, sizeof(__pyx_k_set_terminal_png), 0, 0, 1, 0},
-  {&__pyx_kp_s_set_xrange_100_900, __pyx_k_set_xrange_100_900, sizeof(__pyx_k_set_xrange_100_900), 0, 0, 1, 0},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
@@ -713,14 +714,15 @@ static int __Pyx_InitCachedConstants(void) {
 
 static int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-  __pyx_float_0_1 = PyFloat_FromDouble(0.1); if (unlikely(!__pyx_float_0_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_float_0_5 = PyFloat_FromDouble(0.5); if (unlikely(!__pyx_float_0_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_float_0_7 = PyFloat_FromDouble(0.7); if (unlikely(!__pyx_float_0_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_float_0_01 = PyFloat_FromDouble(0.01); if (unlikely(!__pyx_float_0_01)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_float_0_75 = PyFloat_FromDouble(0.75); if (unlikely(!__pyx_float_0_75)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_float_0_05 = PyFloat_FromDouble(0.05); if (unlikely(!__pyx_float_0_05)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_int_6 = PyInt_FromLong(6); if (unlikely(!__pyx_int_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_int_16 = PyInt_FromLong(16); if (unlikely(!__pyx_int_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_int_80 = PyInt_FromLong(80); if (unlikely(!__pyx_int_80)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_int_800 = PyInt_FromLong(800); if (unlikely(!__pyx_int_800)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_int_32 = PyInt_FromLong(32); if (unlikely(!__pyx_int_32)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_int_100 = PyInt_FromLong(100); if (unlikely(!__pyx_int_100)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_int_500 = PyInt_FromLong(500); if (unlikely(!__pyx_int_500)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -828,102 +830,111 @@ PyMODINIT_FUNC PyInit_consts(void)
  * ## module to store consts
  * 
  * USAGE = "USAGE:\t./ga_polynomial"             # <<<<<<<<<<<<<<
- * FRAGMENT_LENGTH = 16
- * MAX_POPULATION = 800#0
+ * FRAGMENT_LENGTH = 32
+ * MAX_POPULATION = 500#0
  */
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_USAGE, __pyx_kp_s_USAGE_ga_polynomial) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "consts.pyx":4
  * 
  * USAGE = "USAGE:\t./ga_polynomial"
- * FRAGMENT_LENGTH = 16             # <<<<<<<<<<<<<<
- * MAX_POPULATION = 800#0
+ * FRAGMENT_LENGTH = 32             # <<<<<<<<<<<<<<
+ * MAX_POPULATION = 500#0
  * FRAGMENT_PER_SOLUTION = 6
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_FRAGMENT_LENGTH, __pyx_int_16) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_FRAGMENT_LENGTH, __pyx_int_32) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "consts.pyx":5
  * USAGE = "USAGE:\t./ga_polynomial"
- * FRAGMENT_LENGTH = 16
- * MAX_POPULATION = 800#0             # <<<<<<<<<<<<<<
+ * FRAGMENT_LENGTH = 32
+ * MAX_POPULATION = 500#0             # <<<<<<<<<<<<<<
  * FRAGMENT_PER_SOLUTION = 6
  * FITNESS_THRESHOLD = 0.01
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_MAX_POPULATION, __pyx_int_800) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_MAX_POPULATION, __pyx_int_500) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "consts.pyx":6
- * FRAGMENT_LENGTH = 16
- * MAX_POPULATION = 800#0
+ * FRAGMENT_LENGTH = 32
+ * MAX_POPULATION = 500#0
  * FRAGMENT_PER_SOLUTION = 6             # <<<<<<<<<<<<<<
  * FITNESS_THRESHOLD = 0.01
- * SAMPLE_SIZE = MAX_POPULATION * 0.1
+ * SAMPLE_SIZE = int(MAX_POPULATION * 0.05)
  */
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_FRAGMENT_PER_SOLUTION, __pyx_int_6) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 6; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "consts.pyx":7
- * MAX_POPULATION = 800#0
+ * MAX_POPULATION = 500#0
  * FRAGMENT_PER_SOLUTION = 6
  * FITNESS_THRESHOLD = 0.01             # <<<<<<<<<<<<<<
- * SAMPLE_SIZE = MAX_POPULATION * 0.1
- * CROSSOVER_RATE = 0.75
+ * SAMPLE_SIZE = int(MAX_POPULATION * 0.05)
+ * CROSSOVER_RATE = 0.7
  */
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_FITNESS_THRESHOLD, __pyx_float_0_01) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "consts.pyx":8
  * FRAGMENT_PER_SOLUTION = 6
  * FITNESS_THRESHOLD = 0.01
- * SAMPLE_SIZE = MAX_POPULATION * 0.1             # <<<<<<<<<<<<<<
- * CROSSOVER_RATE = 0.75
+ * SAMPLE_SIZE = int(MAX_POPULATION * 0.05)             # <<<<<<<<<<<<<<
+ * CROSSOVER_RATE = 0.7
  * UNIFORM_CROSSOVER_PROB = 0.5
  */
   __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_MAX_POPULATION); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_1, __pyx_float_0_1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_1, __pyx_float_0_05); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_SAMPLE_SIZE, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyNumber_Int(__pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_SAMPLE_SIZE, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "consts.pyx":9
  * FITNESS_THRESHOLD = 0.01
- * SAMPLE_SIZE = MAX_POPULATION * 0.1
- * CROSSOVER_RATE = 0.75             # <<<<<<<<<<<<<<
+ * SAMPLE_SIZE = int(MAX_POPULATION * 0.05)
+ * CROSSOVER_RATE = 0.7             # <<<<<<<<<<<<<<
  * UNIFORM_CROSSOVER_PROB = 0.5
- * SOLUTION_MUTATION_RATE = 0.1
+ * SOLUTION_MUTATION_RATE = 2 / FRAGMENT_PER_SOLUTION
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_CROSSOVER_RATE, __pyx_float_0_75) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_CROSSOVER_RATE, __pyx_float_0_7) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "consts.pyx":10
- * SAMPLE_SIZE = MAX_POPULATION * 0.1
- * CROSSOVER_RATE = 0.75
+ * SAMPLE_SIZE = int(MAX_POPULATION * 0.05)
+ * CROSSOVER_RATE = 0.7
  * UNIFORM_CROSSOVER_PROB = 0.5             # <<<<<<<<<<<<<<
- * SOLUTION_MUTATION_RATE = 0.1
- * TRIES = 80#000
+ * SOLUTION_MUTATION_RATE = 2 / FRAGMENT_PER_SOLUTION
+ * TRIES = 100#0#0
  */
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_UNIFORM_CROSSOVER_PROB, __pyx_float_0_5) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "consts.pyx":11
- * CROSSOVER_RATE = 0.75
+ * CROSSOVER_RATE = 0.7
  * UNIFORM_CROSSOVER_PROB = 0.5
- * SOLUTION_MUTATION_RATE = 0.1             # <<<<<<<<<<<<<<
- * TRIES = 80#000
- * ELITES_NUMBER = MAX_POPULATION * 0.01
+ * SOLUTION_MUTATION_RATE = 2 / FRAGMENT_PER_SOLUTION             # <<<<<<<<<<<<<<
+ * TRIES = 100#0#0
+ * ELITES_NUMBER = int(MAX_POPULATION * 0.01)
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_SOLUTION_MUTATION_RATE, __pyx_float_0_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 11; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_FRAGMENT_PER_SOLUTION); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 11; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_int_2, __pyx_t_1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 11; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_SOLUTION_MUTATION_RATE, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 11; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "consts.pyx":12
  * UNIFORM_CROSSOVER_PROB = 0.5
- * SOLUTION_MUTATION_RATE = 0.1
- * TRIES = 80#000             # <<<<<<<<<<<<<<
- * ELITES_NUMBER = MAX_POPULATION * 0.01
+ * SOLUTION_MUTATION_RATE = 2 / FRAGMENT_PER_SOLUTION
+ * TRIES = 100#0#0             # <<<<<<<<<<<<<<
+ * ELITES_NUMBER = int(MAX_POPULATION * 0.01)
  * DATA_FILE = "datfile.dat"
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_TRIES, __pyx_int_80) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_TRIES, __pyx_int_100) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "consts.pyx":13
- * SOLUTION_MUTATION_RATE = 0.1
- * TRIES = 80#000
- * ELITES_NUMBER = MAX_POPULATION * 0.01             # <<<<<<<<<<<<<<
+ * SOLUTION_MUTATION_RATE = 2 / FRAGMENT_PER_SOLUTION
+ * TRIES = 100#0#0
+ * ELITES_NUMBER = int(MAX_POPULATION * 0.01)             # <<<<<<<<<<<<<<
  * DATA_FILE = "datfile.dat"
  * HISTORY_FILE = "history.dump"
  */
@@ -932,12 +943,15 @@ PyMODINIT_FUNC PyInit_consts(void)
   __pyx_t_1 = PyNumber_Multiply(__pyx_t_2, __pyx_float_0_01); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ELITES_NUMBER, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyNumber_Int(__pyx_t_1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ELITES_NUMBER, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "consts.pyx":14
- * TRIES = 80#000
- * ELITES_NUMBER = MAX_POPULATION * 0.01
+ * TRIES = 100#0#0
+ * ELITES_NUMBER = int(MAX_POPULATION * 0.01)
  * DATA_FILE = "datfile.dat"             # <<<<<<<<<<<<<<
  * HISTORY_FILE = "history.dump"
  * GNP_CONF_FILE = "conf.gnp"
@@ -945,7 +959,7 @@ PyMODINIT_FUNC PyInit_consts(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_DATA_FILE, __pyx_kp_s_datfile_dat) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 14; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "consts.pyx":15
- * ELITES_NUMBER = MAX_POPULATION * 0.01
+ * ELITES_NUMBER = int(MAX_POPULATION * 0.01)
  * DATA_FILE = "datfile.dat"
  * HISTORY_FILE = "history.dump"             # <<<<<<<<<<<<<<
  * GNP_CONF_FILE = "conf.gnp"
@@ -967,58 +981,58 @@ PyMODINIT_FUNC PyInit_consts(void)
  * GNP_CONF_FILE = "conf.gnp"
  * CONF = ("set terminal png\n" +             # <<<<<<<<<<<<<<
  *         "set output \"output.jpg\"\n" +
- *         "set xrange[-100:900]\n" +
+ *         "set autoscale xy\n" +
  */
-  __pyx_t_1 = PyNumber_Add(__pyx_kp_s_set_terminal_png, __pyx_kp_s_set_output_output_jpg); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyNumber_Add(__pyx_kp_s_set_terminal_png, __pyx_kp_s_set_output_output_jpg); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
 
   /* "consts.pyx":18
  * GNP_CONF_FILE = "conf.gnp"
  * CONF = ("set terminal png\n" +
  *         "set output \"output.jpg\"\n" +             # <<<<<<<<<<<<<<
- *         "set xrange[-100:900]\n" +
+ *         "set autoscale xy\n" +
  *         "plot \'{}\' using 1:2 title \"datfile\" lw 2 with line, ({})+({}*x)+({}*x**2)+({}*x**3)+({}*x**4)+({}*x**5) title \"myfunc\" lw 2 with line;")
  */
-  __pyx_t_2 = PyNumber_Add(__pyx_t_1, __pyx_kp_s_set_xrange_100_900); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 18; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyNumber_Add(__pyx_t_2, __pyx_kp_s_set_autoscale_xy); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 18; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "consts.pyx":19
  * CONF = ("set terminal png\n" +
  *         "set output \"output.jpg\"\n" +
- *         "set xrange[-100:900]\n" +             # <<<<<<<<<<<<<<
+ *         "set autoscale xy\n" +             # <<<<<<<<<<<<<<
  *         "plot \'{}\' using 1:2 title \"datfile\" lw 2 with line, ({})+({}*x)+({}*x**2)+({}*x**3)+({}*x**4)+({}*x**5) title \"myfunc\" lw 2 with line;")
  * GNP_EXEC = "gnuplot -persist {}".format(GNP_CONF_FILE)
  */
-  __pyx_t_1 = PyNumber_Add(__pyx_t_2, __pyx_kp_s_plot_using_1_2_title_datfile_lw); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 19; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_CONF, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyNumber_Add(__pyx_t_1, __pyx_kp_s_plot_using_1_2_title_datfile_lw); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 19; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_CONF, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "consts.pyx":21
- *         "set xrange[-100:900]\n" +
+ *         "set autoscale xy\n" +
  *         "plot \'{}\' using 1:2 title \"datfile\" lw 2 with line, ({})+({}*x)+({}*x**2)+({}*x**3)+({}*x**4)+({}*x**5) title \"myfunc\" lw 2 with line;")
  * GNP_EXEC = "gnuplot -persist {}".format(GNP_CONF_FILE)             # <<<<<<<<<<<<<<
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_s_gnuplot_persist, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_kp_s_gnuplot_persist, __pyx_n_s_format); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_GNP_CONF_FILE); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
-  if (CYTHON_COMPILING_IN_CPYTHON && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
+  if (CYTHON_COMPILING_IN_CPYTHON && likely(PyMethod_Check(__pyx_t_1))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_1);
     if (likely(__pyx_t_4)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
       __Pyx_INCREF(__pyx_t_4);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
+      __Pyx_DECREF_SET(__pyx_t_1, function);
     }
   }
   if (!__pyx_t_4) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_GOTREF(__pyx_t_2);
   } else {
     __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
@@ -1026,23 +1040,23 @@ PyMODINIT_FUNC PyInit_consts(void)
     __Pyx_GIVEREF(__pyx_t_3);
     PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_t_3);
     __pyx_t_3 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_GNP_EXEC, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_GNP_EXEC, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "consts.pyx":1
  * ## module to store consts             # <<<<<<<<<<<<<<
  * 
  * USAGE = "USAGE:\t./ga_polynomial"
  */
-  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /*--- Wrapped vars code ---*/
 
